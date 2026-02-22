@@ -256,6 +256,7 @@ static void input_redrawCursor() {
 
     fflush(stdout);
 }
+
 static void add_match(char ***list, size_t *count, size_t *cap, const char *entry) {
     if (*count + 1 >= *cap) {
         *cap *= 2;
@@ -264,7 +265,7 @@ static void add_match(char ***list, size_t *count, size_t *cap, const char *entr
     (*list)[(*count)++] = strdup(entry);
 }
 
-char **autocomplete(char *str) {
+char **autocomplete(char *str, bool first_token) {
     size_t cap = 32, count = 0;
     char **out = malloc(sizeof(char*) * cap);
     if (!out) return NULL;
@@ -315,6 +316,12 @@ char **autocomplete(char *str) {
             }
         }
         closedir(d);
+
+        if (!first_token) {
+            out[count] = NULL;
+            free(input);
+            return out;
+        }
     }
 
     if (!slash) {
@@ -368,7 +375,6 @@ char *input_getInteractive(char *user_prompt) {
         tcsetattr(STDIN_FILENO, TCSANOW, &essence_new_termios);
 
         setvbuf(stdout, NULL, _IONBF, 0);
-
 
         essence_termios_ready = 1;
     }
@@ -565,13 +571,14 @@ char *input_getInteractive(char *user_prompt) {
                 // Temporarily null-terminate the token to pass to autocomplete
                 char saved = input_buffer[essence_prompt_x];
                 input_buffer[essence_prompt_x] = 0;
-                /* find start of last token (after last space or '/') */
+                
+                // find start of last token (after last space or '/') 
                 char *last_token = NULL;
                 size_t start = essence_prompt_x;
                 while (start > 0 && input_buffer[start-1] != ' ') start--;
                 last_token = &input_buffer[start];
 
-                char **s = autocomplete(last_token);
+                char **s = autocomplete(last_token, (start == 0));
                 input_buffer[essence_prompt_x] = saved; // restore original char
 
                 if (*(s+1) == NULL) {

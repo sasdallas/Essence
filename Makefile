@@ -1,5 +1,5 @@
 # Essence Makefile
-CC = gcc
+CC ?= gcc
 CFLAGS = -g
 
 # Directories
