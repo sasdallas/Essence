@@ -170,6 +170,8 @@ char *parser_interpretVariable(token_t *tok) {
     } else {
         // Normal character
         snprintf(tmp, 128, "$");
+        lexer_ungetToken(next);
+        return strdup(tmp);
     }
 
     free(next);
