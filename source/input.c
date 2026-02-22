@@ -27,6 +27,7 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include <stdbool.h>
 
 /* Input type */
 int essence_input_type = INPUT_TYPE_INTERACTIVE;
