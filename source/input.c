@@ -371,6 +371,7 @@ char *input_getInteractive(char *user_prompt) {
         tcgetattr(STDIN_FILENO, &essence_new_termios);
 
         essence_new_termios.c_lflag &= ~(ECHO | ICANON);
+        essence_new_termios.c_iflag |= ICRNL;
         atexit(input_restoreInteractive);
 
         tcsetattr(STDIN_FILENO, TCSANOW, &essence_new_termios);

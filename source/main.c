@@ -39,7 +39,6 @@ void usage() {
 
 void version() {
     printf("essence version %d.%d.%d\n", ESSENCE_VERSION_MAJOR, ESSENCE_VERSION_MINOR, ESSENCE_VERSION_LOWER);
-    printf("Copyright (C) 2025 The Ethereal Development Team\n");
     exit(0);
 }
 

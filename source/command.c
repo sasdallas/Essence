@@ -87,9 +87,9 @@ int command_execute(command_t *command) {
         }
 
         // Duplicate file descriptors if we need it
-        if (command->stdin) dup2(command->stdin, STDIN_FILENO);
-        if (command->stdout) dup2(command->stdout, STDOUT_FILENO);
-        if (command->stderr) dup2(command->stderr, STDERR_FILENO);
+        if (command->stdin != -1) dup2(command->stdin, STDIN_FILENO);
+        if (command->stdout != -1) dup2(command->stdout, STDOUT_FILENO);
+        if (command->stderr != -1) dup2(command->stderr, STDERR_FILENO);
 
         // Execute the command!
         execvp(command->argv[0], command->argv);
