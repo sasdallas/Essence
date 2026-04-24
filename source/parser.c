@@ -368,6 +368,8 @@ static int parser_parseUntil(const char *stop1, const char *stop2, command_t **o
                 lexer_ungetToken(n); break;
             }
 
+            
+
             default:
                 fprintf(stderr, "essence: parser: Unrecognized token %d\n", new->type);
                 NEXT_TOKEN();
@@ -893,6 +895,16 @@ void parser_interpret() {
 
                 lexer_ungetToken(n);
                 break;
+
+            case TOKEN_TYPE_OPEN_PAREN:
+                TOKEN_IGNORE_QUOTED('(');
+                fprintf(stderr, "essence: parser: Parantheses not implemented\n");
+                NEXT_TOKEN();
+
+            case TOKEN_TYPE_CLOSE_PAREN:
+                TOKEN_IGNORE_QUOTED(')');
+                fprintf(stderr, "essence: parser: Parantheses not implemented\n");
+                NEXT_TOKEN();
 
             default:
                 fprintf(stderr, "essence: parser: Unrecognized token %d\n", tok->type);
