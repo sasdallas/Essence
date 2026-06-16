@@ -20,6 +20,7 @@ extern int if_cond(int argc, char *argv[]);
 extern int then_cond(int argc, char *argv[]);
 extern int fi_cond(int argc, char *argv[]);
 extern int export(int argc, char *argv[]);
+extern int exec_builtin(int argc, char *argv[]);
 
 
 int help(int argc, char *argv[]);
@@ -29,7 +30,8 @@ builtin_t builtin_list[] = {
     { .name = "pwd", .usage = "pwd", .func = pwd },
     { .name = "help", .usage = "help", .func = help },
     { .name = "exit", .usage = "exit [n]", .func = exit_builtin },
-    { .name = "export", .usage = "export [var]=[value]", .func = export}
+    { .name = "export", .usage = "export [var]=[value]", .func = export },
+    { .name = "exec", .usage = "exec [...]", .func = exec_builtin }
 };
 
 const int builtin_list_size = sizeof(builtin_list) / sizeof(builtin_t);
