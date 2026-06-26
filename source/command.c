@@ -91,6 +91,9 @@ int command_execute(command_t *command) {
         if (command->stdout != -1) dup2(command->stdout, STDOUT_FILENO);
         if (command->stderr != -1) dup2(command->stderr, STDERR_FILENO);
 
+        // Restore termios
+        tcsetattr(STDOUT_FILENO, TCSANOW, &essence_original_termios);
+
         // Execute the command!
         execvp(command->argv[0], command->argv);
         
@@ -134,6 +137,7 @@ int command_execute(command_t *command) {
         fprintf(stderr, "essence: Process \"%s\" terminated by signal %s\n", command->argv[0], strsignal(WTERMSIG(wstatus)));
     }
 
+    tcsetattr(STDOUT_FILENO, TCSANOW, &essence_new_termios);
     cmd_last_exit_status = WEXITSTATUS(wstatus);
     cmd_waitpid_exit_status = wstatus;
     return WEXITSTATUS(wstatus);

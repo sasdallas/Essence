@@ -52,9 +52,9 @@ char *saved_input_buffer = NULL;
 int history_index = 0;
 
 /* Original termios settings */
-static struct termios essence_original_termios;
-static struct termios essence_new_termios;
-static int essence_termios_ready = 0;
+struct termios essence_original_termios;
+struct termios essence_new_termios;
+int essence_termios_ready = 0;
 
 /* Input file */
 FILE *input_script = NULL;
@@ -374,7 +374,7 @@ char *input_getInteractive(char *user_prompt) {
         essence_new_termios.c_iflag |= ICRNL;
         atexit(input_restoreInteractive);
 
-        tcsetattr(STDIN_FILENO, TCSANOW, &essence_new_termios);
+        tcsetattr(STDIN_FILENO, TCSADRAIN, &essence_new_termios);
 
         setvbuf(stdout, NULL, _IONBF, 0);
 

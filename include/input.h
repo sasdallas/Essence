@@ -16,6 +16,7 @@
 
 /**** INCLUDES ****/
 #include <stdio.h>
+#include <termios.h>
 
 /**** DEFINITIONS ****/
 
@@ -31,6 +32,9 @@
 
 extern int essence_input_type;
 extern int essence_prompt;
+
+extern struct termios essence_original_termios;
+extern struct termios essence_new_termios;
 
 extern FILE *input_script;
 
