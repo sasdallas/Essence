@@ -99,14 +99,16 @@ int main(int argc, char *argv[]) {
     // Read arguments
     int ch;
     int index;
+    int command = 0;
+
     opterr = 1;
-    while ((ch = getopt_long(argc, argv, "c:hv", (const struct option*)&options, &index)) != -1) {
+    
+    while ((ch = getopt_long(argc, argv, "chv", (const struct option*)&options, &index)) != -1) {
         if (ch == 0) ch = options[index].val;
         switch (ch) {
             case 'c':
-                input_loadBuffer(optarg);
-                parser_interpret(); 
-                return cmd_last_exit_status;
+                command = 1;
+                break;
 
             case 'v':
                 version();
@@ -124,6 +126,12 @@ int main(int argc, char *argv[]) {
     essence_argv = &argv[optind];
 
     if (argc-optind) {
+        if (command) {
+            input_loadBuffer(argv[optind]);
+            parser_interpret(); 
+            return cmd_last_exit_status;
+        }
+
         return essence_runScript(argv[optind]);
     }
 
