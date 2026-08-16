@@ -457,15 +457,20 @@ char *input_getInteractive(char *user_prompt) {
 
                     // Free old buffer if needed
                     if (history_index) free(input_buffer);
+                    size_t h_len = strlen(h);
 
-                    input_buffer = malloc(INPUT_DEFAULT_BUFFER_SIZE);
+                    input_buffer_size = INPUT_DEFAULT_BUFFER_SIZE;
+                    while (input_buffer_size < h_len + 1) {
+                        input_buffer_size *= 2;
+                    }
+
+                    input_buffer = malloc(input_buffer_size);
                     strcpy(input_buffer, h);
 
                     history_index++;
 
-                    essence_prompt_x = strlen(h);
-                    input_buffer_len = strlen(h);
-                    input_buffer_size = strlen(h);
+                    essence_prompt_x = h_len;
+                    input_buffer_len = h_len;
 
                     printf("\033[G%s%s", prompt, input_buffer);
 
@@ -542,12 +547,15 @@ char *input_getInteractive(char *user_prompt) {
             continue;
         }
 
+        assert(input_buffer);
+
         // What character is it
         switch (ch) {
             case '\n':
                 // We are at the end of the file/line
                 putchar('\n');
 
+                bool had_input = input_buffer_len > 0;
                 input_buffer[input_buffer_len++] = '\n';
 
                 // Do we need to enlarge the buffer?
@@ -560,7 +568,7 @@ char *input_getInteractive(char *user_prompt) {
 
                 essence_prompt_x = 0;
 
-                if (input_buffer_len) history_append(input_buffer);
+                if (had_input) history_append(input_buffer);
                 if (saved_input_buffer) free(saved_input_buffer);
                 if (prompt && !user_prompt) free(prompt); 
 
